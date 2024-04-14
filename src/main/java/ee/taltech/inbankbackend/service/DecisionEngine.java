@@ -19,7 +19,6 @@ public class DecisionEngine {
 
     // Used to check for the validity of the presented ID code.
     private final EstonianPersonalCodeValidator validator = new EstonianPersonalCodeValidator();
-    private int creditModifier = 0;
 
     /**
      * Calculates the maximum loan amount and period for the customer based on their ID code,
@@ -44,20 +43,19 @@ public class DecisionEngine {
         } catch (Exception e) {
             return new Decision(null, null, e.getMessage());
         }
-
         int outputLoanAmount;
-        creditModifier = getCreditModifier(personalCode);
+        int creditModifier = getCreditModifier(personalCode);
 
         if (creditModifier == 0) {
             throw new NoValidLoanException("No valid loan found!");
         }
 
-        while (highestValidLoanAmount(loanPeriod) < DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
+        while (highestValidLoanAmount(creditModifier, loanPeriod) <= DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
             loanPeriod++;
         }
 
         if (loanPeriod <= DecisionEngineConstants.MAXIMUM_LOAN_PERIOD) {
-            outputLoanAmount = Math.min(DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT, highestValidLoanAmount(loanPeriod));
+            outputLoanAmount = Math.min(DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT, highestValidLoanAmount(creditModifier, loanPeriod));
         } else {
             throw new NoValidLoanException("No valid loan found!");
         }
@@ -70,7 +68,7 @@ public class DecisionEngine {
      *
      * @return Largest valid loan amount
      */
-    private int highestValidLoanAmount(int loanPeriod) {
+    private int highestValidLoanAmount(int creditModifier, int loanPeriod) {
         return creditModifier * loanPeriod;
     }
 
