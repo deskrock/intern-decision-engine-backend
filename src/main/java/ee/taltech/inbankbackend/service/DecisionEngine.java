@@ -35,7 +35,7 @@ public class DecisionEngine {
      * @throws InvalidLoanPeriodException If the requested loan period is invalid
      * @throws NoValidLoanException If there is no valid loan found for the given ID code, loan amount and loan period
      */
-    public Decision calculateApprovedLoan(String personalCode, Long loanAmount, int loanPeriod) throws Exception {
+    public Decision calculateApprovedLoan(String personalCode, Long loanAmount, int loanPeriod) throws InvalidLoanPeriodException, InvalidPersonalCodeException, InvalidLoanAmountException, NoValidLoanException {
         verifyInputs(personalCode, loanAmount, loanPeriod);
         int outputLoanAmount;
         int creditModifier = getCreditModifier(personalCode);
