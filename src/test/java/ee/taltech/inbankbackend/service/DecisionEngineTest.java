@@ -1,6 +1,6 @@
 package ee.taltech.inbankbackend.service;
 
-import ee.taltech.inbankbackend.config.DecisionEngineConstants;
+import ee.taltech.inbankbackend.config.DecisionEngineConstant;
 import ee.taltech.inbankbackend.exception.InvalidLoanAmountException;
 import ee.taltech.inbankbackend.exception.InvalidLoanPeriodException;
 import ee.taltech.inbankbackend.exception.InvalidPersonalCodeException;
@@ -70,8 +70,8 @@ class DecisionEngineTest {
 
     @Test
     void testInvalidLoanAmount() {
-        Long tooLowLoanAmount = DecisionEngineConstants.MINIMUM_LOAN_AMOUNT - 1L;
-        Long tooHighLoanAmount = DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT + 1L;
+        Long tooLowLoanAmount = DecisionEngineConstant.MINIMUM_LOAN_AMOUNT - 1L;
+        Long tooHighLoanAmount = DecisionEngineConstant.MAXIMUM_LOAN_AMOUNT + 1L;
 
         assertThrows(InvalidLoanAmountException.class,
                 () -> decisionEngine.calculateApprovedLoan(segment1PersonalCode, tooLowLoanAmount, 12));
@@ -82,8 +82,8 @@ class DecisionEngineTest {
 
     @Test
     void testInvalidLoanPeriod() {
-        int tooShortLoanPeriod = DecisionEngineConstants.MINIMUM_LOAN_PERIOD - 1;
-        int tooLongLoanPeriod = DecisionEngineConstants.MAXIMUM_LOAN_PERIOD + 1;
+        int tooShortLoanPeriod = DecisionEngineConstant.MINIMUM_LOAN_PERIOD - 1;
+        int tooLongLoanPeriod = DecisionEngineConstant.MAXIMUM_LOAN_PERIOD + 1;
 
         assertThrows(InvalidLoanPeriodException.class,
                 () -> decisionEngine.calculateApprovedLoan(segment1PersonalCode, 4000L, tooShortLoanPeriod));
