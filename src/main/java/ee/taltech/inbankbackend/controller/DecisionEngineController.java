@@ -2,10 +2,10 @@ package ee.taltech.inbankbackend.controller;
 
 import ee.taltech.inbankbackend.dto.DecisionRequest;
 import ee.taltech.inbankbackend.dto.DecisionResponse;
-import ee.taltech.inbankbackend.exceptions.InvalidLoanAmountException;
-import ee.taltech.inbankbackend.exceptions.InvalidLoanPeriodException;
-import ee.taltech.inbankbackend.exceptions.InvalidPersonalCodeException;
-import ee.taltech.inbankbackend.exceptions.NoValidLoanException;
+import ee.taltech.inbankbackend.exception.InvalidLoanAmountException;
+import ee.taltech.inbankbackend.exception.InvalidLoanPeriodException;
+import ee.taltech.inbankbackend.exception.InvalidPersonalCodeException;
+import ee.taltech.inbankbackend.exception.NoValidLoanException;
 import ee.taltech.inbankbackend.model.Decision;
 import ee.taltech.inbankbackend.service.DecisionEngine;
 import org.springframework.beans.factory.annotation.Autowired;

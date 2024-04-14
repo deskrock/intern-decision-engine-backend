@@ -1,17 +1,17 @@
-package ee.taltech.inbankbackend.exceptions;
+package ee.taltech.inbankbackend.exception;
 
 /**
- * Thrown when requested loan amount is invalid.
+ * Thrown when requested loan period is invalid.
  */
-public class InvalidLoanAmountException extends Throwable {
+public class InvalidLoanPeriodException extends Throwable {
     private final String message;
     private final Throwable cause;
 
-    public InvalidLoanAmountException(String message) {
+    public InvalidLoanPeriodException(String message) {
         this(message, null);
     }
 
-    public InvalidLoanAmountException(String message, Throwable cause) {
+    public InvalidLoanPeriodException(String message, Throwable cause) {
         this.message = message;
         this.cause = cause;
     }

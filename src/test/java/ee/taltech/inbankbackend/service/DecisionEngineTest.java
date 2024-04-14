@@ -1,10 +1,10 @@
 package ee.taltech.inbankbackend.service;
 
 import ee.taltech.inbankbackend.config.DecisionEngineConstants;
-import ee.taltech.inbankbackend.exceptions.InvalidLoanAmountException;
-import ee.taltech.inbankbackend.exceptions.InvalidLoanPeriodException;
-import ee.taltech.inbankbackend.exceptions.InvalidPersonalCodeException;
-import ee.taltech.inbankbackend.exceptions.NoValidLoanException;
+import ee.taltech.inbankbackend.exception.InvalidLoanAmountException;
+import ee.taltech.inbankbackend.exception.InvalidLoanPeriodException;
+import ee.taltech.inbankbackend.exception.InvalidPersonalCodeException;
+import ee.taltech.inbankbackend.exception.NoValidLoanException;
 import ee.taltech.inbankbackend.model.Decision;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

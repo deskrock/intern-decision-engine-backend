@@ -1,17 +1,17 @@
-package ee.taltech.inbankbackend.exceptions;
+package ee.taltech.inbankbackend.exception;
 
 /**
- * Thrown when no valid loan is found.
+ * Thrown when provided personal ID code is invalid.
  */
-public class NoValidLoanException extends Throwable {
+public class InvalidPersonalCodeException extends Throwable {
     private final String message;
     private final Throwable cause;
 
-    public NoValidLoanException(String message) {
+    public InvalidPersonalCodeException(String message) {
         this(message, null);
     }
 
-    public NoValidLoanException(String message, Throwable cause) {
+    public InvalidPersonalCodeException(String message, Throwable cause) {
         this.message = message;
         this.cause = cause;
     }
