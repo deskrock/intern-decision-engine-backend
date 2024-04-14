@@ -7,17 +7,16 @@
 - Implementation uses smart approach by understanding the core logic of this decision engine is to provide the maximum loan amount possible to the user.
 It assumes that the maximum amount of loan comes from the case when `credit_modifier = 1` which makes the `(credit modifier / loan amount) * loan period) = 1`
 Then if we want to get the maximum amount that supports this condition, we can just multiply both side with loan amount and this equation turns into
-`loan amount = credit modifier * loan period` and with this simplification we find the maximum amount of loan that we can provide. 
+`loan amount = credit modifier * loan period` and with this simplification we find the maximum amount of loan that we can provide without looping and this reduces the complexity to O(1). 
 The intern also uses this amount to compare with the lowest possible value to find out if we need to search for a different loan period.
 - Intern documented the code by following the `Javadoc` standards
-- Provided some tests cases
+- Provided some unit and integration tests cases
 
 ### Problems & Improvement Suggestions
 
 - Intern did not use the git commits effectively. Instead of committing every change in a single commit, I would suggest dividing them into reasonable sizes and with relative short descriptions in commit message.
-- I believe intern did not set the local git config right as the second commit has a different user name and it does not link to any github user.
-- Intern uses test cases by mocking the services and making the mocked bean return exactly what the intern wants it to return. This gives the illusion of testing and does not allow us to detect any bugs.
-- Decision Engine gives negative result or modifies the loan period if the loan amount calculation is exactly equal to 2000 as I mentioned this problem in previous section.
+- I believe intern did not set the local git config right as the second commit has a different username and email, and it does not link to any GitHub user.
+- Intern wrote integration test cases by mocking the services and making the mocked bean return exactly what the intern wants it to return. This gives the illusion of testing and does not allow us to detect any bugs.
 - Intern decided to use the `DecisionResponse` Dto as a class variable and this can cause multi-thread problems such as race conditions. By default, Spring boot beans are singleton and if there are concurrent requests, this approach might override the response data of another request.
 Imagine the case when a positive loan request and a negative loan request comes at the same time but because of concurrency before controller returns the answer of the positive loan request, the negative result overrides the answer, and we return negative answer to both of the loan request.
 This should not be a class variable, and it should be a POJO (Plain Old Java Object) and created for each request separately
