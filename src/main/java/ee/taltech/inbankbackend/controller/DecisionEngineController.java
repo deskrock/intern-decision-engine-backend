@@ -39,9 +39,9 @@ public class DecisionEngineController {
     public ResponseEntity<DecisionResponse> requestDecision(@RequestBody DecisionRequest request) throws Exception {
         DecisionResponse response = new DecisionResponse();
         Decision decision = decisionEngine.calculateApprovedLoan(request.getPersonalCode(), request.getLoanAmount(), request.getLoanPeriod());
-        response.setLoanAmount(decision.getLoanAmount());
-        response.setLoanPeriod(decision.getLoanPeriod());
-        response.setErrorMessage(decision.getErrorMessage());
+        response.setLoanAmount(decision.loanAmount());
+        response.setLoanPeriod(decision.loanPeriod());
+        response.setErrorMessage(decision.errorMessage());
         return ResponseEntity.ok(response);
     }
 }

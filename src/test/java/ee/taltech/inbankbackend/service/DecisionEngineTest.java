@@ -43,22 +43,22 @@ class DecisionEngineTest {
     @Test
     void testSegment1PersonalCode() throws Exception {
         Decision decision = decisionEngine.calculateApprovedLoan(segment1PersonalCode, 4000L, 12);
-        assertEquals(2000, decision.getLoanAmount());
-        assertEquals(20, decision.getLoanPeriod());
+        assertEquals(2000, decision.loanAmount());
+        assertEquals(20, decision.loanPeriod());
     }
 
     @Test
     void testSegment2PersonalCode() throws Exception {
         Decision decision = decisionEngine.calculateApprovedLoan(segment2PersonalCode, 4000L, 12);
-        assertEquals(3600, decision.getLoanAmount());
-        assertEquals(12, decision.getLoanPeriod());
+        assertEquals(3600, decision.loanAmount());
+        assertEquals(12, decision.loanPeriod());
     }
 
     @Test
     void testSegment3PersonalCode() throws Exception {
         Decision decision = decisionEngine.calculateApprovedLoan(segment3PersonalCode, 4000L, 12);
-        assertEquals(10000, decision.getLoanAmount());
-        assertEquals(12, decision.getLoanPeriod());
+        assertEquals(10000, decision.loanAmount());
+        assertEquals(12, decision.loanPeriod());
     }
 
     @Test
@@ -95,8 +95,8 @@ class DecisionEngineTest {
     @Test
     void testFindSuitableLoanPeriod() throws Exception {
         Decision decision = decisionEngine.calculateApprovedLoan(segment2PersonalCode, 2000L, 12);
-        assertEquals(3600, decision.getLoanAmount());
-        assertEquals(12, decision.getLoanPeriod());
+        assertEquals(3600, decision.loanAmount());
+        assertEquals(12, decision.loanPeriod());
     }
 
     @Test

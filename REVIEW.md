@@ -35,3 +35,4 @@ This value needs to be in local scope instead of class variable.
 I believe coupling the constants by putting it inside the class would make it easy to understand as the reader does not need to switch between classes
 - I believe naming the `DecisionEngine` to something like `DecisionService` to demonstrate that it is service layer could improve the readability as it would be easier for the new comers to understand that is a service layer class.
 - Custom Exceptions should extend `Exception` instead of `Throwable` as they are exception and not an `Error`
+- As `Decision` uses final fields, we can use `Record` type for this class as it is immutable
