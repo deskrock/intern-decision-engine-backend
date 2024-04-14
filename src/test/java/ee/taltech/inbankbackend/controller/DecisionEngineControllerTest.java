@@ -1,4 +1,4 @@
-package ee.taltech.inbankbackend.endpoint;
+package ee.taltech.inbankbackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.taltech.inbankbackend.dto.DecisionRequest;

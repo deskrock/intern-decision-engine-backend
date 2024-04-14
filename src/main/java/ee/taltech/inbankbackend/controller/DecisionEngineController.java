@@ -1,4 +1,4 @@
-package ee.taltech.inbankbackend.endpoint;
+package ee.taltech.inbankbackend.controller;
 
 import ee.taltech.inbankbackend.dto.DecisionRequest;
 import ee.taltech.inbankbackend.dto.DecisionResponse;
