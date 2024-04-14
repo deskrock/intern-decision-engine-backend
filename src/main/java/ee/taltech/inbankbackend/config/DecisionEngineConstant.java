@@ -3,7 +3,9 @@ package ee.taltech.inbankbackend.config;
 /**
  * Holds all necessary constants for the decision engine.
  */
-public class DecisionEngineConstants {
+public class DecisionEngineConstant {
+    private DecisionEngineConstant(){}
+
     public static final Integer MINIMUM_LOAN_AMOUNT = 2000;
     public static final Integer MAXIMUM_LOAN_AMOUNT = 10000;
     public static final Integer MAXIMUM_LOAN_PERIOD = 60;

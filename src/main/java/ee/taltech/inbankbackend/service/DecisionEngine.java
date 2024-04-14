@@ -1,7 +1,7 @@
 package ee.taltech.inbankbackend.service;
 
 import com.github.vladislavgoltjajev.personalcode.locale.estonia.EstonianPersonalCodeValidator;
-import ee.taltech.inbankbackend.config.DecisionEngineConstants;
+import ee.taltech.inbankbackend.config.DecisionEngineConstant;
 import ee.taltech.inbankbackend.exception.InvalidLoanAmountException;
 import ee.taltech.inbankbackend.exception.InvalidLoanPeriodException;
 import ee.taltech.inbankbackend.exception.InvalidPersonalCodeException;
@@ -44,12 +44,12 @@ public class DecisionEngine {
             throw new NoValidLoanException("No valid loan found!");
         }
 
-        while (highestValidLoanAmount(creditModifier, loanPeriod) < DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
+        while (highestValidLoanAmount(creditModifier, loanPeriod) < DecisionEngineConstant.MINIMUM_LOAN_AMOUNT) {
             loanPeriod++;
         }
 
-        if (loanPeriod <= DecisionEngineConstants.MAXIMUM_LOAN_PERIOD) {
-            outputLoanAmount = Math.min(DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT, highestValidLoanAmount(creditModifier, loanPeriod));
+        if (loanPeriod <= DecisionEngineConstant.MAXIMUM_LOAN_PERIOD) {
+            outputLoanAmount = Math.min(DecisionEngineConstant.MAXIMUM_LOAN_AMOUNT, highestValidLoanAmount(creditModifier, loanPeriod));
         } else {
             throw new NoValidLoanException("No valid loan found!");
         }
@@ -82,12 +82,12 @@ public class DecisionEngine {
         if (segment < 2500) {
             return 0;
         } else if (segment < 5000) {
-            return DecisionEngineConstants.SEGMENT_1_CREDIT_MODIFIER;
+            return DecisionEngineConstant.SEGMENT_1_CREDIT_MODIFIER;
         } else if (segment < 7500) {
-            return DecisionEngineConstants.SEGMENT_2_CREDIT_MODIFIER;
+            return DecisionEngineConstant.SEGMENT_2_CREDIT_MODIFIER;
         }
 
-        return DecisionEngineConstants.SEGMENT_3_CREDIT_MODIFIER;
+        return DecisionEngineConstant.SEGMENT_3_CREDIT_MODIFIER;
     }
 
     /**
@@ -107,12 +107,12 @@ public class DecisionEngine {
         if (!validator.isValid(personalCode)) {
             throw new InvalidPersonalCodeException("Invalid personal ID code!");
         }
-        if ((loanAmount < DecisionEngineConstants.MINIMUM_LOAN_AMOUNT)
-                || (loanAmount > DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT)) {
+        if ((loanAmount < DecisionEngineConstant.MINIMUM_LOAN_AMOUNT)
+                || (loanAmount > DecisionEngineConstant.MAXIMUM_LOAN_AMOUNT)) {
             throw new InvalidLoanAmountException("Invalid loan amount!");
         }
-        if ((loanPeriod < DecisionEngineConstants.MINIMUM_LOAN_PERIOD)
-                || (loanPeriod > DecisionEngineConstants.MAXIMUM_LOAN_PERIOD)) {
+        if ((loanPeriod < DecisionEngineConstant.MINIMUM_LOAN_PERIOD)
+                || (loanPeriod > DecisionEngineConstant.MAXIMUM_LOAN_PERIOD)) {
             throw new InvalidLoanPeriodException("Invalid loan period!");
         }
 
