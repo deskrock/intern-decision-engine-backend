@@ -1,4 +1,4 @@
-package ee.taltech.inbankbackend.endpoint;
+package ee.taltech.inbankbackend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

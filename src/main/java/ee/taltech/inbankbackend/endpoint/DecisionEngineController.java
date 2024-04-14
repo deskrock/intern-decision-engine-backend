@@ -1,10 +1,12 @@
 package ee.taltech.inbankbackend.endpoint;
 
+import ee.taltech.inbankbackend.dto.DecisionRequest;
+import ee.taltech.inbankbackend.dto.DecisionResponse;
 import ee.taltech.inbankbackend.exceptions.InvalidLoanAmountException;
 import ee.taltech.inbankbackend.exceptions.InvalidLoanPeriodException;
 import ee.taltech.inbankbackend.exceptions.InvalidPersonalCodeException;
 import ee.taltech.inbankbackend.exceptions.NoValidLoanException;
-import ee.taltech.inbankbackend.service.Decision;
+import ee.taltech.inbankbackend.model.Decision;
 import ee.taltech.inbankbackend.service.DecisionEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
