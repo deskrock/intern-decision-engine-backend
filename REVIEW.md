@@ -27,6 +27,9 @@ This value needs to be in local scope instead of class variable.
 - The `verifyInputs` method of `DecisionEngine` is coupled and not reusable. Instead of a single method, we could split the checks in separate methods to make it reusable in case future decisions might have only the subgroup of the defined input group.
 - We are using `Spring Boot 3` and this means we do not need to `@AutoWired` the constructors when there is only one.
 - `DecisionResponse` should not be annotated by `@Component` as it would create a singleton bean of it.
+- Integration test exception messages do not match with defined messages in code and in README file
+- `givenUnexpectedError_whenRequestDecision_thenReturnsInternalServerError` test does not bring any value as we handle the exception cases and if there are exceptions that we did not cover, will be thrown as internal server error by default.
+- There are double assertion in integration test, first it gets asserted in JSON format then it gets asserted in POJO.
 
 
 ### Nitpick Suggestions
