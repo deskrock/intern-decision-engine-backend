@@ -15,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -24,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-@ExtendWith(MockitoExtension.class)
 class DecisionEngineControllerTest {
 
     @Autowired
@@ -59,9 +61,9 @@ class DecisionEngineControllerTest {
                 .andReturn();
 
         DecisionResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), DecisionResponse.class);
-        assert response.getLoanAmount() == 2000;
-        assert response.getLoanPeriod() == 20;
-        assert response.getErrorMessage() == null;
+        assertEquals(2000,response.getLoanAmount());
+        assertEquals(20,response.getLoanPeriod());
+        assertNull(response.getErrorMessage());
     }
 
     /**
@@ -83,9 +85,9 @@ class DecisionEngineControllerTest {
                 .andReturn();
 
         DecisionResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), DecisionResponse.class);
-        assert response.getLoanAmount() == null;
-        assert response.getLoanPeriod() == null;
-        assert response.getErrorMessage().equals("Invalid personal ID code!");
+        assertNull(response.getLoanAmount());
+        assertNull(response.getLoanPeriod());
+        assertEquals("Invalid personal ID code!", response.getErrorMessage());
     }
 
     /**
@@ -107,9 +109,9 @@ class DecisionEngineControllerTest {
                 .andReturn();
 
         DecisionResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), DecisionResponse.class);
-        assert response.getLoanAmount() == null;
-        assert response.getLoanPeriod() == null;
-        assert response.getErrorMessage().equals("Invalid loan amount!");
+        assertNull(response.getLoanAmount());
+        assertNull(response.getLoanPeriod());
+        assertEquals("Invalid loan amount!", response.getErrorMessage());
     }
 
     /**
@@ -131,9 +133,9 @@ class DecisionEngineControllerTest {
                 .andReturn();
 
         DecisionResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), DecisionResponse.class);
-        assert response.getLoanAmount() == null;
-        assert response.getLoanPeriod() == null;
-        assert response.getErrorMessage().equals("Invalid loan period!");
+        assertNull(response.getLoanAmount());
+        assertNull(response.getLoanPeriod());
+        assertEquals("Invalid loan period!", response.getErrorMessage());
     }
 
     /**
@@ -155,8 +157,8 @@ class DecisionEngineControllerTest {
                 .andReturn();
 
         DecisionResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), DecisionResponse.class);
-        assert response.getLoanAmount() == null;
-        assert response.getLoanPeriod() == null;
-        assert response.getErrorMessage().equals("No valid loan found!");
+        assertNull(response.getLoanAmount());
+        assertNull(response.getLoanPeriod());
+        assertEquals("No valid loan found!", response.getErrorMessage());
     }
 }
