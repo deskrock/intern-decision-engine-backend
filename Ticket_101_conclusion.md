@@ -6,11 +6,13 @@
 ## Strengths:
 - The ticket implementation follows good coding practices with clear variable names and structured methods, enhancing readability and maintainability.
 - Input validation is implemented robustly, handling various exceptions and ensuring the integrity of the calculations.
-- The code follows Single Responsibility Principle (SRP).
+- The code mostly follows Single Responsibility Principle (SRP).
 - Classes and Methods are well documented.
+- The code is covered by unit tests, ensuring the reliability of the implementation and facilitating future changes.
 
 ## Areas for Improvement:
-- Although the errors are handled well the Strings should be stored in one central location which adheres to the Single Responsibility Principle by separating the responsibility of managing error messages from other functionalities in the codebase.
+- Having separate exception classes for different types of exceptions leads to duplication of code and violates the principle of DRY (Don't Repeat Yourself).
+- The best practice is to centralize error messages, ensuring a clean separation of concerns and adhering to the Single Responsibility Principle.
 
 ## Important Shortcoming:
 
