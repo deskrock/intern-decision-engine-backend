@@ -30,6 +30,7 @@ This value needs to be in local scope instead of class variable.
 - Integration test exception messages do not match with defined messages in code and in README file and we cannot detect it because of the mocking.
 - `givenUnexpectedError_whenRequestDecision_thenReturnsInternalServerError` test does not bring any value as we handle the exception cases and if there are exceptions that we did not cover, will be thrown as internal server error by default.
 - There are double assertion in integration test, first it gets asserted in JSON format then it gets asserted in POJO.
+- The unit tests uses InjectMock annotation but there are not mocks to inject and `DecisionEngine` does not take any property in the constructor. I also believe that mocking shouldn't exist in unit testing
 - `DecisionEngineController` handles both communication between layers and handling the exception cases. These exceptions can happen in other possible future controllers as well 
 and I believe it would lead to cleaner solution if we handle the exceptions in a specific area that exists only for exception handling purpose. This also makes our controllers feel like they have single responsibility to do.
 

@@ -1,4 +1,4 @@
-package ee.taltech.inbankbackend.config;
+package ee.taltech.inbankbackend.utils;
 
 /**
  * Holds all necessary constants for the decision engine.

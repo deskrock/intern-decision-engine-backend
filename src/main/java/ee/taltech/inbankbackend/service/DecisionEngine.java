@@ -1,12 +1,12 @@
 package ee.taltech.inbankbackend.service;
 
-import com.github.vladislavgoltjajev.personalcode.locale.estonia.EstonianPersonalCodeValidator;
-import ee.taltech.inbankbackend.config.DecisionEngineConstant;
+import ee.taltech.inbankbackend.utils.DecisionEngineConstant;
 import ee.taltech.inbankbackend.exception.InvalidLoanAmountException;
 import ee.taltech.inbankbackend.exception.InvalidLoanPeriodException;
 import ee.taltech.inbankbackend.exception.InvalidPersonalCodeException;
 import ee.taltech.inbankbackend.exception.NoValidLoanException;
 import ee.taltech.inbankbackend.model.Decision;
+import ee.taltech.inbankbackend.utils.Validator;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DecisionEngine {
+    private Validator validator;
 
-    // Used to check for the validity of the presented ID code.
-    private final EstonianPersonalCodeValidator validator = new EstonianPersonalCodeValidator();
+    DecisionEngine(Validator validator){
+        this.validator = validator;
+    }
 
     /**
      * Calculates the maximum loan amount and period for the customer based on their ID code,
@@ -36,7 +38,9 @@ public class DecisionEngine {
      * @throws NoValidLoanException If there is no valid loan found for the given ID code, loan amount and loan period
      */
     public Decision calculateApprovedLoan(String personalCode, Long loanAmount, int loanPeriod) throws InvalidLoanPeriodException, InvalidPersonalCodeException, InvalidLoanAmountException, NoValidLoanException {
-        verifyInputs(personalCode, loanAmount, loanPeriod);
+        validator.verifyPersonalCode(personalCode);
+        validator.verifyLoanAmount(loanAmount);
+        validator.verifyLoanPeriod(loanPeriod);
         int outputLoanAmount;
         int creditModifier = getCreditModifier(personalCode);
 
@@ -90,31 +94,4 @@ public class DecisionEngine {
         return DecisionEngineConstant.SEGMENT_3_CREDIT_MODIFIER;
     }
 
-    /**
-     * Verify that all inputs are valid according to business rules.
-     * If inputs are invalid, then throws corresponding exceptions.
-     *
-     * @param personalCode Provided personal ID code
-     * @param loanAmount Requested loan amount
-     * @param loanPeriod Requested loan period
-     * @throws InvalidPersonalCodeException If the provided personal ID code is invalid
-     * @throws InvalidLoanAmountException If the requested loan amount is invalid
-     * @throws InvalidLoanPeriodException If the requested loan period is invalid
-     */
-    private void verifyInputs(String personalCode, Long loanAmount, int loanPeriod)
-            throws InvalidPersonalCodeException, InvalidLoanAmountException, InvalidLoanPeriodException {
-
-        if (!validator.isValid(personalCode)) {
-            throw new InvalidPersonalCodeException("Invalid personal ID code!");
-        }
-        if ((loanAmount < DecisionEngineConstant.MINIMUM_LOAN_AMOUNT)
-                || (loanAmount > DecisionEngineConstant.MAXIMUM_LOAN_AMOUNT)) {
-            throw new InvalidLoanAmountException("Invalid loan amount!");
-        }
-        if ((loanPeriod < DecisionEngineConstant.MINIMUM_LOAN_PERIOD)
-                || (loanPeriod > DecisionEngineConstant.MAXIMUM_LOAN_PERIOD)) {
-            throw new InvalidLoanPeriodException("Invalid loan period!");
-        }
-
-    }
 }

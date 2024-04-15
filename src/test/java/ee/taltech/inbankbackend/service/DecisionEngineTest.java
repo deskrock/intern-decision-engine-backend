@@ -1,24 +1,19 @@
 package ee.taltech.inbankbackend.service;
 
-import ee.taltech.inbankbackend.config.DecisionEngineConstant;
+import ee.taltech.inbankbackend.utils.DecisionEngineConstant;
 import ee.taltech.inbankbackend.exception.InvalidLoanAmountException;
 import ee.taltech.inbankbackend.exception.InvalidLoanPeriodException;
 import ee.taltech.inbankbackend.exception.InvalidPersonalCodeException;
 import ee.taltech.inbankbackend.exception.NoValidLoanException;
 import ee.taltech.inbankbackend.model.Decision;
+import ee.taltech.inbankbackend.utils.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(MockitoExtension.class)
 class DecisionEngineTest {
-
-    @InjectMocks
     private DecisionEngine decisionEngine;
 
     private String debtorPersonalCode;
@@ -32,6 +27,7 @@ class DecisionEngineTest {
         segment1PersonalCode = "50307172740";
         segment2PersonalCode = "38411266610";
         segment3PersonalCode = "35006069515";
+        decisionEngine = new DecisionEngine(new Validator());
     }
 
     @Test
