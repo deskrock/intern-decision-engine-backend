@@ -89,10 +89,17 @@ class DecisionEngineTest {
     }
 
     @Test
-    void testFindSuitableLoanPeriod() throws Exception {
+    void testFindMaximumLoanAmount() throws Exception {
         Decision decision = decisionEngine.calculateApprovedLoan(segment2PersonalCode, 2000L, 12);
         assertEquals(3600, decision.loanAmount());
         assertEquals(12, decision.loanPeriod());
+    }
+
+    @Test
+    void testFindSuitableLoanPeriod() throws Exception {
+        Decision decision = decisionEngine.calculateApprovedLoan(segment1PersonalCode, 2000L, 15);
+        assertEquals(2000, decision.loanAmount());
+        assertEquals(20, decision.loanPeriod());
     }
 
     @Test

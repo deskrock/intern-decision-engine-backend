@@ -7,7 +7,6 @@ import ee.taltech.inbankbackend.service.DecisionEngine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -160,5 +159,39 @@ class DecisionEngineControllerTest {
         assertNull(response.getLoanAmount());
         assertNull(response.getLoanPeriod());
         assertEquals("No valid loan found!", response.getErrorMessage());
+    }
+
+    @Test
+    void givenValidRequest_whenLoanPeriodNotSuitable_thenReturnsSuitableLoanPeriodIfExists() throws Exception {
+        DecisionRequest request = new DecisionRequest("50307172740", 2000L, 15);
+
+        MvcResult result = mockMvc.perform(post("/loan/decision")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        DecisionResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), DecisionResponse.class);
+        assertEquals(2000,response.getLoanAmount());
+        assertEquals(20,response.getLoanPeriod());
+        assertNull(response.getErrorMessage());
+    }
+
+    @Test
+    void givenValidRequest_whenLoanAmountNotSuitable_thenReturnsSuitableLoanAmountIfExists() throws Exception {
+        DecisionRequest request = new DecisionRequest("50307172740", 10000L, 40);
+
+        MvcResult result = mockMvc.perform(post("/loan/decision")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        DecisionResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), DecisionResponse.class);
+        assertEquals(4000,response.getLoanAmount());
+        assertEquals(40,response.getLoanPeriod());
+        assertNull(response.getErrorMessage());
     }
 }

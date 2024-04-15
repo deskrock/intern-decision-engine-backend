@@ -34,15 +34,22 @@ I will not modify this part but I wanted to mention to open the discussion about
 - The unit tests uses InjectMock annotation but there are not mocks to inject and `DecisionEngine` does not take any property in the constructor. I also believe that mocking shouldn't exist in unit testing
 - `DecisionEngineController` handles both communication between layers and handling the exception cases. These exceptions can happen in other possible future controllers as well 
 and I believe it would lead to cleaner solution if we handle the exceptions in a specific area that exists only for exception handling purpose. This also makes our controllers feel like they have single responsibility to do.
+- `testFindSuitableLoanPeriod` test is not testing the period but instead it tests the maximum amount.
 
 
 ### Task Ambiguities
 
-In the task description, it does not mention how to handle the increment behaviour, and it does not provide us a limit.
+- In the task description, it does not mention how to handle the increment behaviour, and it does not provide us a limit.
 For example, this solution could return decimal values more than 2 digit, or it can return a value that is not dividable by 5 or 10.
 This type information should be clear in the document as intern may not be familiar with finance and potential use cases.
 For example somehow if we return 3999 and user takes this loan and wants to withdraw it from ATM, they wouldn't be able to withdraw all the amount as generally ATMs return multiplication of 5 or 10.
-
+- There is ambiguity in description about the order of the steps. What I mean is that if we should stick to the user requested amount or the requested loan period.
+Take the segment 1 user as an example, if user asks 6000$ loan with 12 month loan period, should we return 2000$ loan with 20 month loan period OR 6000$ loan with 60 month period?
+If we calculate credit score for both cases;
+ 2000$ for 20 month case  `(100/2000)*20 = 1` and 6000$ for 60 month case  `(100/6000)*60 = 1`
+This means both cases are valid but right now the implementation will suggest 2000$ version as the task description expresses `If a suitable loan amount is not
+  found within the selected period, the decision engine should also try to find a new suitable period` So in order to change the period, we have the condition of not be able to find loan amount.
+If this logic is correct, then everything is okay with the implementation. Also, because of this approach, there will always be some value for anyone who doesnt have debts.
 
 ### Nitpick Suggestions
 
@@ -55,6 +62,7 @@ I believe coupling the constants by putting it inside the class would make it ea
 - Tests uses `assert` keyword of Java which we have built-in support but Spring Boot includes `Junit 5` which comes with `Assert` methods that gives more detailed answer when assertion fails, and it also improves readability as it removes the symbols and adds texts like `assertt x == y` vs `Assert.Equals(x, y)`
 If tester is not aware of context, they may not be able to detect which one is expected which one is provided but if we use the `Assert` methods, they can distinguish the expected one and actual one.
 - I would suggest that intern should use `Sonarqube` to detect code smells and potential bugs. As this tool is free and available [open source](https://github.com/SonarSource/sonarqube)
+- In my opinion the test namings are not the best. For example `givenInvalidPersonalCode_whenRequestDecision_thenReturnsBadRequest` the `_whenRequestDecision_` does not explain anything to the reader. Some improvements can be done.
 
 ### Suggestions for next code review
 
