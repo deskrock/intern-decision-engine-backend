@@ -36,6 +36,14 @@ I will not modify this part but I wanted to mention to open the discussion about
 and I believe it would lead to cleaner solution if we handle the exceptions in a specific area that exists only for exception handling purpose. This also makes our controllers feel like they have single responsibility to do.
 
 
+### Task Ambiguities
+
+In the task description, it does not mention how to handle the increment behaviour, and it does not provide us a limit.
+For example, this solution could return decimal values more than 2 digit, or it can return a value that is not dividable by 5 or 10.
+This type information should be clear in the document as intern may not be familiar with finance and potential use cases.
+For example somehow if we return 3999 and user takes this loan and wants to withdraw it from ATM, they wouldn't be able to withdraw all the amount as generally ATMs return multiplication of 5 or 10.
+
+
 ### Nitpick Suggestions
 
 - The constants are only used inside of `DecisionEngine` and I believe because of its concept, I do not believe that there can be case of reusability of those constants. 
