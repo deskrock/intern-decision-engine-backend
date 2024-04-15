@@ -2,6 +2,6 @@ package ee.taltech.inbankbackend.model;
 
 
 /**
- * Holds the response data of the REST endpoint.
+ * Holds the decision data from the service layer. It is for internal usage and not open to the end-user.
  */
 public record Decision(int loanAmount, int loanPeriod, String errorMessage) {}
