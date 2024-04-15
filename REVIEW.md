@@ -27,15 +27,25 @@ This value needs to be in local scope instead of class variable.
 - The `verifyInputs` method of `DecisionEngine` is coupled and not reusable. Instead of a single method, we could split the checks in separate methods to make it reusable in case future decisions might have only the subgroup of the defined input group.
 - We are using `Spring Boot 3` and this means we do not need to `@AutoWired` the constructors when there is only one.
 - `DecisionResponse` should not be annotated by `@Component` as it would create a singleton bean of it.
-- Integration test exception messages do not match with defined messages in code and in README file
+- Integration test exception messages do not match with defined messages in code and in README file and we cannot detect it because of the mocking.
 - `givenUnexpectedError_whenRequestDecision_thenReturnsInternalServerError` test does not bring any value as we handle the exception cases and if there are exceptions that we did not cover, will be thrown as internal server error by default.
 - There are double assertion in integration test, first it gets asserted in JSON format then it gets asserted in POJO.
+- `DecisionEngineController` handles both communication between layers and handling the exception cases. These exceptions can happen in other possible future controllers as well 
+and I believe it would lead to cleaner solution if we handle the exceptions in a specific area that exists only for exception handling purpose. This also makes our controllers feel like they have single responsibility to do.
 
 
 ### Nitpick Suggestions
 
 - The constants are only used inside of `DecisionEngine` and I believe because of its concept, I do not believe that there can be case of reusability of those constants. 
 I believe coupling the constants by putting it inside the class would make it easy to understand as the reader does not need to switch between classes
-- I believe naming the `DecisionEngine` to something like `DecisionService` to demonstrate that it is service layer could improve the readability as it would be easier for the new comers to understand that is a service layer class.
+- I believe naming the `DecisionEngine` to something like `DecisionService` to demonstrate that it is service layer could improve the readability as it would be easier for the newcomers to understand that is a service layer class.
 - Custom Exceptions should extend `Exception` instead of `Throwable` as they are exception and not an `Error`
 - As `Decision` uses final fields, we can use `Record` type for this class as it is immutable
+- I prefer integration tests as less mocking as possible because mocking kills the concept of testing unless we are not mocking the third party services such as external API calls etc.
+- Tests uses `assert` keyword of Java which we have built-in support but Spring Boot includes `Junit 5` which comes with `Assert` methods that gives more detailed answer when assertion fails, and it also improves readability as it removes the symbols and adds texts like `assertt x == y` vs `Assert.Equals(x, y)`
+If tester is not aware of context, they may not be able to detect which one is expected which one is provided but if we use the `Assert` methods, they can distinguish the expected one and actual one.
+- I would suggest that intern should use `Sonarqube` to detect code smells and potential bugs. As this tool is free and available [open source](https://github.com/SonarSource/sonarqube)
+
+### Suggestions for next code review
+
+I believe this type of review can feel like it changes the context fast. Maybe if I separated the review per classes it might be easier for the intern. I would ask this approach to the intern if that would be the preferred way and adjust my approach accordingly.
