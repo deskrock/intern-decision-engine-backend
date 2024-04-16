@@ -5,6 +5,8 @@ Normally this process should be done through pull request but for our case, sadl
 Please check out the [REVIEW.md](REVIEW.md) to see the documented version of the review and changes.
 I will use this branch to do the necessary changes if there are any, in order to help the intern to finish the TICKET101 task.
 
+In order to view the implementation of TICKET102 click [here](https://github.com/teadulellari/intern-decision-engine-backend/tree/TICKET102) and to see the comments about ticket 102 [here](https://github.com/teadulellari/intern-decision-engine-backend/blob/TICKET102/COMMENTS.md)
+
 # InBank Backend Service
 
 This service provides a REST API for calculating an approved loan amount and period for a customer.

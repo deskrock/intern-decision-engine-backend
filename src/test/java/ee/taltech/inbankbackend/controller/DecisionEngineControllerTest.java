@@ -60,8 +60,8 @@ class DecisionEngineControllerTest {
                 .andReturn();
 
         DecisionResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), DecisionResponse.class);
-        assertEquals(2000,response.getLoanAmount());
-        assertEquals(20,response.getLoanPeriod());
+        assertEquals(2000, response.getLoanAmount());
+        assertEquals(20, response.getLoanPeriod());
         assertNull(response.getErrorMessage());
     }
 
@@ -173,8 +173,8 @@ class DecisionEngineControllerTest {
                 .andReturn();
 
         DecisionResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), DecisionResponse.class);
-        assertEquals(2000,response.getLoanAmount());
-        assertEquals(20,response.getLoanPeriod());
+        assertEquals(2000, response.getLoanAmount());
+        assertEquals(20, response.getLoanPeriod());
         assertNull(response.getErrorMessage());
     }
 
@@ -190,8 +190,8 @@ class DecisionEngineControllerTest {
                 .andReturn();
 
         DecisionResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), DecisionResponse.class);
-        assertEquals(4000,response.getLoanAmount());
-        assertEquals(40,response.getLoanPeriod());
+        assertEquals(4000, response.getLoanAmount());
+        assertEquals(40, response.getLoanPeriod());
         assertNull(response.getErrorMessage());
     }
 }

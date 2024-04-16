@@ -1,11 +1,11 @@
 package ee.taltech.inbankbackend.service;
 
-import ee.taltech.inbankbackend.utils.DecisionEngineConstant;
 import ee.taltech.inbankbackend.exception.InvalidLoanAmountException;
 import ee.taltech.inbankbackend.exception.InvalidLoanPeriodException;
 import ee.taltech.inbankbackend.exception.InvalidPersonalCodeException;
 import ee.taltech.inbankbackend.exception.NoValidLoanException;
 import ee.taltech.inbankbackend.model.Decision;
+import ee.taltech.inbankbackend.utils.DecisionEngineConstant;
 import ee.taltech.inbankbackend.utils.Validator;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DecisionEngine {
-    private Validator validator;
+    private final Validator validator;
 
-    DecisionEngine(Validator validator){
+    DecisionEngine(Validator validator) {
         this.validator = validator;
     }
 
@@ -29,13 +29,13 @@ public class DecisionEngine {
      * The loan amount must be between 2000 and 10000€ months (inclusive).
      *
      * @param personalCode ID code of the customer that made the request.
-     * @param loanAmount Requested loan amount
-     * @param loanPeriod Requested loan period
+     * @param loanAmount   Requested loan amount
+     * @param loanPeriod   Requested loan period
      * @return A Decision object containing the approved loan amount and period, and an error message (if any)
      * @throws InvalidPersonalCodeException If the provided personal ID code is invalid
-     * @throws InvalidLoanAmountException If the requested loan amount is invalid
-     * @throws InvalidLoanPeriodException If the requested loan period is invalid
-     * @throws NoValidLoanException If there is no valid loan found for the given ID code, loan amount and loan period
+     * @throws InvalidLoanAmountException   If the requested loan amount is invalid
+     * @throws InvalidLoanPeriodException   If the requested loan period is invalid
+     * @throws NoValidLoanException         If there is no valid loan found for the given ID code, loan amount and loan period
      */
     public Decision calculateApprovedLoan(String personalCode, Long loanAmount, int loanPeriod) throws InvalidLoanPeriodException, InvalidPersonalCodeException, InvalidLoanAmountException, NoValidLoanException {
         validator.verifyPersonalCode(personalCode);

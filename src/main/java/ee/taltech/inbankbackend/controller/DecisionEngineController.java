@@ -5,11 +5,7 @@ import ee.taltech.inbankbackend.dto.DecisionResponse;
 import ee.taltech.inbankbackend.model.Decision;
 import ee.taltech.inbankbackend.service.DecisionEngine;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/loan")

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Validator {
-    private EstonianPersonalCodeValidator personalCodeValidator;
+    private final EstonianPersonalCodeValidator personalCodeValidator;
 
     public Validator() {
         personalCodeValidator = new EstonianPersonalCodeValidator();
