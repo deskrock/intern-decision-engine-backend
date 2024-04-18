@@ -1,11 +1,11 @@
-package ee.taltech.inbankbackend.endpoint;
+package ee.taltech.inbankbackend.controller;
 
-import ee.taltech.inbankbackend.exceptions.InvalidLoanAmountException;
-import ee.taltech.inbankbackend.exceptions.InvalidLoanPeriodException;
-import ee.taltech.inbankbackend.exceptions.InvalidPersonalCodeException;
-import ee.taltech.inbankbackend.exceptions.NoValidLoanException;
-import ee.taltech.inbankbackend.service.Decision;
-import ee.taltech.inbankbackend.service.DecisionEngine;
+import ee.taltech.inbankbackend.exceptions.*;
+import ee.taltech.inbankbackend.model.DecisionRequest;
+import ee.taltech.inbankbackend.model.DecisionResponse;
+import ee.taltech.inbankbackend.model.Decision;
+import ee.taltech.inbankbackend.service.DecisionService;
+import ee.taltech.inbankbackend.exceptions.InvalidLoanAgeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +14,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 @RequestMapping("/loan")
 @CrossOrigin
-public class DecisionEngineController {
+public class DecisionController {
 
-    private final DecisionEngine decisionEngine;
+    private final DecisionService decisionEngine;
     private final DecisionResponse response;
 
     @Autowired
-    DecisionEngineController(DecisionEngine decisionEngine, DecisionResponse response) {
-        this.decisionEngine = decisionEngine;
+    DecisionController(DecisionService decisionService, DecisionResponse response) {
+        this.decisionEngine = decisionService;
         this.response = response;
     }
 
@@ -33,12 +32,11 @@ public class DecisionEngineController {
      * A REST endpoint that handles requests for loan decisions.
      * The endpoint accepts POST requests with a request body containing the customer's personal ID code,
      * requested loan amount, and loan period.<br><br>
-     * - If the loan amount or period is invalid, the endpoint returns a bad request response with an error message.<br>
+     * - If the loan amount or period or customer age is invalid, the endpoint returns a bad request response with an error message.<br>
      * - If the personal ID code is invalid, the endpoint returns a bad request response with an error message.<br>
      * - If an unexpected error occurs, the endpoint returns an internal server error response with an error message.<br>
      * - If no valid loans can be found, the endpoint returns a not found response with an error message.<br>
      * - If a valid loan is found, a DecisionResponse is returned containing the approved loan amount and period.
-     *
      * @param request The request body containing the customer's personal ID code, requested loan amount, and loan period
      * @return A ResponseEntity with a DecisionResponse body containing the approved loan amount and period, and an error message (if any)
      */
@@ -52,7 +50,7 @@ public class DecisionEngineController {
             response.setErrorMessage(decision.getErrorMessage());
 
             return ResponseEntity.ok(response);
-        } catch (InvalidPersonalCodeException | InvalidLoanAmountException | InvalidLoanPeriodException e) {
+        } catch (InvalidPersonalCodeException | InvalidLoanAmountException | InvalidLoanPeriodException | InvalidLoanAgeException e) {
             response.setLoanAmount(null);
             response.setLoanPeriod(null);
             response.setErrorMessage(e.getMessage());
@@ -72,4 +70,5 @@ public class DecisionEngineController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+
 }

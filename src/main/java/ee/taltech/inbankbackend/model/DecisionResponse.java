@@ -1,4 +1,4 @@
-package ee.taltech.inbankbackend.endpoint;
+package ee.taltech.inbankbackend.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 public class DecisionResponse {
-    private Integer loanAmount;
+
+    private Long loanAmount;
     private Integer loanPeriod;
     private String errorMessage;
 }
