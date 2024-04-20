@@ -1,11 +1,16 @@
 package ee.taltech.inbankbackend.service;
 
+import static ee.taltech.inbankbackend.config.DecisionEngineConstants.MAXIMUM_EXPECTED_LIFETIME;
+import static ee.taltech.inbankbackend.config.DecisionEngineConstants.MAXIMUM_LOAN_PERIOD_IN_YEARS;
+import static ee.taltech.inbankbackend.config.DecisionEngineConstants.MINIMUM_ELIGIBLE_AGE;
 import com.github.vladislavgoltjajev.personalcode.locale.estonia.EstonianPersonalCodeValidator;
 import ee.taltech.inbankbackend.config.DecisionEngineConstants;
+import ee.taltech.inbankbackend.exceptions.AgeRestrictionException;
 import ee.taltech.inbankbackend.exceptions.InvalidLoanAmountException;
 import ee.taltech.inbankbackend.exceptions.InvalidLoanPeriodException;
 import ee.taltech.inbankbackend.exceptions.InvalidPersonalCodeException;
 import ee.taltech.inbankbackend.exceptions.NoValidLoanException;
+import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,7 +41,7 @@ public class DecisionEngine {
    */
   public Decision calculateApprovedLoan(String personalCode, Long loanAmount, int loanPeriod)
       throws InvalidPersonalCodeException, InvalidLoanAmountException, InvalidLoanPeriodException,
-      NoValidLoanException {
+      NoValidLoanException, AgeRestrictionException {
     verifyInputs(personalCode, loanAmount, loanPeriod);
 
     int creditModifier = getCreditModifier(personalCode);
@@ -149,11 +154,15 @@ public class DecisionEngine {
      * @throws InvalidLoanPeriodException If the requested loan period is invalid
      */
     private void verifyInputs(String personalCode, Long loanAmount, int loanPeriod)
-            throws InvalidPersonalCodeException, InvalidLoanAmountException, InvalidLoanPeriodException {
+        throws InvalidPersonalCodeException, InvalidLoanAmountException, InvalidLoanPeriodException,
+        AgeRestrictionException {
 
         if (!validator.isValid(personalCode)) {
             throw new InvalidPersonalCodeException("Invalid personal ID code!");
         }
+      if (isInvalidAgeForGivenId(personalCode)) {
+        throw new AgeRestrictionException("Loan not granted due to age restrictions.");
+      }
         if (!(DecisionEngineConstants.MINIMUM_LOAN_AMOUNT <= loanAmount)
                 || !(loanAmount <= DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT)) {
             throw new InvalidLoanAmountException("Invalid loan amount!");
@@ -164,4 +173,66 @@ public class DecisionEngine {
         }
 
     }
+
+  /**
+   * Extracts the birthdate from the given identification code.
+   *
+   * @param idCode The identification code containing information about birthdate.
+   * @return The birthdate extracted from the identification code.
+   */
+  private LocalDate extractBirthdate(String idCode) {
+    // Extracting the century, year, month, and day from the identification code.
+    int century = Integer.parseInt(idCode.substring(0, 1));
+    int year = Integer.parseInt(idCode.substring(1, 3));
+    int month = Integer.parseInt(idCode.substring(3, 5));
+    int day = Integer.parseInt(idCode.substring(5, 7));
+
+    // Determining the prefix for the birth year based on the century digit.
+    // 1-2: 19th century; 3-4: 20th century; 5-6: 21st century
+    int prefix;
+    if (century <= 2) {
+      prefix = 1800;
+    } else if (century <= 4) {
+      prefix = 1900;
+    } else {
+      prefix = 2000;
+    }
+
+    // Adding the prefix to the extracted birth year to get the full birth year.
+    year += prefix;
+
+    return LocalDate.of(year, month, day);
+  }
+
+  /**
+   * Calculates the age based on the birthdate extracted from the identification code.
+   *
+   * @param idCode The identification code containing information about birthdate.
+   * @return The calculated age based on the birthdate.
+   */
+  private int calculateAge(String idCode) {
+    LocalDate birthdate = extractBirthdate(idCode);
+    LocalDate now = LocalDate.now();
+
+    int age = now.getYear() - birthdate.getYear();
+
+    // Adjusting age if the current month and day are before the birth month and day.
+    if (now.getMonthValue() < birthdate.getMonthValue() ||
+        (now.getMonthValue() == birthdate.getMonthValue() && now.getDayOfMonth() < birthdate.getDayOfMonth())) {
+      age--;
+    }
+
+    return age;
+  }
+
+  /**
+   * Determines if the age extracted from the identification code is valid for a loan application.
+   *
+   * @param idCode The identification code containing information about birthdate.
+   * @return True if the age is invalid for a loan application, false otherwise.
+   */
+  private boolean isInvalidAgeForGivenId(String idCode) {
+    int age = calculateAge(idCode);
+    return age < MINIMUM_ELIGIBLE_AGE || age > (MAXIMUM_EXPECTED_LIFETIME - MAXIMUM_LOAN_PERIOD_IN_YEARS);
+  }
 }
