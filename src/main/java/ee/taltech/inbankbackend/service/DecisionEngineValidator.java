@@ -9,6 +9,7 @@ import ee.taltech.inbankbackend.exceptions.InvalidLoanPeriodException;
 import ee.taltech.inbankbackend.exceptions.InvalidPersonalCodeException;
 import ee.taltech.inbankbackend.exceptions.UnderageException;
 import org.springframework.stereotype.Component;
+import java.time.Period;
 
 /**
  * A Component class that provides a method for validating a personal ID code
@@ -66,7 +67,8 @@ public class DecisionEngineValidator {
      */
     public int getAgeInMonths(String personalCode) throws InvalidPersonalCodeException {
         try {
-            return parser.getAge(personalCode).getMonths();
+            Period period = parser.getAge(personalCode);
+            return period.getMonths() + period.getYears() * 12;
         } catch (PersonalCodeException e) {
             throw new InvalidPersonalCodeException("Invalid personal ID code!");
         }

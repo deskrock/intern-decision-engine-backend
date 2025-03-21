@@ -26,6 +26,8 @@ class DecisionEngineTest {
     private String segment1PersonalCode;
     private String segment2PersonalCode;
     private String segment3PersonalCode;
+    private String underagePersonalCode;
+    private String tooOldPersonalCode;
 
     @BeforeEach
     void setUp() {
@@ -33,6 +35,8 @@ class DecisionEngineTest {
         segment1PersonalCode = "50307172740";
         segment2PersonalCode = "38411266610";
         segment3PersonalCode = "35006069515";
+        underagePersonalCode = "50906062511";
+        tooOldPersonalCode = "10307172747";
     }
 
     @Test
@@ -108,6 +112,23 @@ class DecisionEngineTest {
     void testNoValidLoanFound() {
         assertThrows(NoValidLoanException.class,
                 () -> decisionEngine.calculateApprovedLoan(debtorPersonalCode, 10000L, 48));
+    }
+
+    @Test
+    void testUnderage() {
+        assertThrows(UnderageException.class,
+                () -> decisionEngine.calculateApprovedLoan(underagePersonalCode, 2000L, 48));
+    }
+
+    @Test
+    void testTooOld() {
+        assertThrows(TooOldException.class,
+                () -> decisionEngine.calculateApprovedLoan(tooOldPersonalCode, 2000L, 48));
+    }
+
+    @Test
+    void testMonthsCalculator() throws InvalidPersonalCodeException {
+        assertEquals(2660, new DecisionEngineValidator().getAgeInMonths(tooOldPersonalCode));
     }
 
 }

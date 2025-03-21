@@ -66,7 +66,7 @@ public class DecisionEngine {
             throw new InvalidPersonalCodeException("Invalid personal ID code!");
         }
         final int maxAgeForCountry;
-        switch (personalCode.charAt(3)) { // Simulated differentiation between Baltics
+        switch (personalCode.charAt(1)) { // Simulated differentiation between Baltics
             case '3':
                 maxAgeForCountry = DecisionEngineConstants.ESTONIA_EXPECTED_AGE;
                 break;
