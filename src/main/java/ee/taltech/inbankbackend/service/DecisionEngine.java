@@ -5,6 +5,8 @@ import ee.taltech.inbankbackend.exceptions.InvalidLoanAmountException;
 import ee.taltech.inbankbackend.exceptions.InvalidLoanPeriodException;
 import ee.taltech.inbankbackend.exceptions.InvalidPersonalCodeException;
 import ee.taltech.inbankbackend.exceptions.NoValidLoanException;
+import ee.taltech.inbankbackend.exceptions.TooOldException;
+import ee.taltech.inbankbackend.exceptions.UnderageException;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,10 +36,12 @@ public class DecisionEngine {
      * @throws InvalidLoanAmountException If the requested loan amount is invalid
      * @throws InvalidLoanPeriodException If the requested loan period is invalid
      * @throws NoValidLoanException If there is no valid loan found for the given ID code, loan amount and loan period
+     * @throws TooOldException If the customer is beyond the life expectancy of their country minus the loan period
+     * @throws UnderageException If the customer is still underage
      */
     public Decision calculateApprovedLoan(String personalCode, Long loanAmount, int loanPeriod)
             throws InvalidPersonalCodeException, InvalidLoanAmountException, InvalidLoanPeriodException,
-            NoValidLoanException {
+            NoValidLoanException, TooOldException, UnderageException {
         try {
             validator.verifyInputs(personalCode, loanAmount, loanPeriod);
         } catch (Exception e) {
@@ -53,6 +57,17 @@ public class DecisionEngine {
 
         while (highestValidLoanAmount(loanPeriod) < DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
             loanPeriod++;
+        }
+        
+        final int ageInMonths;
+        try {
+            ageInMonths = validator.getAgeInMonths(personalCode);
+        } catch (InvalidPersonalCodeException e) {
+            throw new InvalidPersonalCodeException("Invalid personal ID code!");
+        }
+        int maxAge = DecisionEngineConstants.ESTONIA_EXPECTED_AGE - loanPeriod;
+        if (ageInMonths > maxAge) {
+            throw new TooOldException("Customer is too old!");
         }
 
         if (loanPeriod <= DecisionEngineConstants.MAXIMUM_LOAN_PERIOD) {

@@ -4,6 +4,8 @@ import ee.taltech.inbankbackend.exceptions.InvalidLoanAmountException;
 import ee.taltech.inbankbackend.exceptions.InvalidLoanPeriodException;
 import ee.taltech.inbankbackend.exceptions.InvalidPersonalCodeException;
 import ee.taltech.inbankbackend.exceptions.NoValidLoanException;
+import ee.taltech.inbankbackend.exceptions.TooOldException;
+import ee.taltech.inbankbackend.exceptions.UnderageException;
 import ee.taltech.inbankbackend.service.Decision;
 import ee.taltech.inbankbackend.service.DecisionEngine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,12 @@ public class DecisionEngineController {
             response.setErrorMessage(e.getMessage());
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (TooOldException | UnderageException e) {
+            response.setLoanAmount(null);
+            response.setLoanPeriod(null);
+            response.setErrorMessage(e.getMessage());
+
+            return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
             response.setLoanAmount(null);
             response.setLoanPeriod(null);
