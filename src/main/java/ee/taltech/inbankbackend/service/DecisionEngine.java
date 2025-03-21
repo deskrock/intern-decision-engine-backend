@@ -65,7 +65,21 @@ public class DecisionEngine {
         } catch (InvalidPersonalCodeException e) {
             throw new InvalidPersonalCodeException("Invalid personal ID code!");
         }
-        int maxAge = DecisionEngineConstants.ESTONIA_EXPECTED_AGE - loanPeriod;
+        final int maxAgeForCountry;
+        switch (personalCode.charAt(3)) { // Simulated differentiation between Baltics
+            case '3':
+                maxAgeForCountry = DecisionEngineConstants.ESTONIA_EXPECTED_AGE;
+                break;
+            case '2':
+                maxAgeForCountry = DecisionEngineConstants.LATVIA_EXPECTED_AGE;
+                break;
+            case '1':
+                maxAgeForCountry = DecisionEngineConstants.LITHUANIA_EXPECTED_AGE;
+                break;
+            default:
+                maxAgeForCountry = DecisionEngineConstants.ESTONIA_EXPECTED_AGE;
+        }
+        int maxAge = maxAgeForCountry * 12 - loanPeriod;
         if (ageInMonths > maxAge) {
             throw new TooOldException("Customer is too old!");
         }
