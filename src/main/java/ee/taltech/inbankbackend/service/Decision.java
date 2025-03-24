@@ -12,4 +12,10 @@ public class Decision {
     private final Integer loanAmount;
     private final Integer loanPeriod;
     private final String errorMessage;
+
+    public Decision(Integer loanAmount, Integer loanPeriod, String errorMessage) {
+        this.loanAmount = loanAmount;
+        this.loanPeriod = loanPeriod;
+        this.errorMessage = errorMessage;
+    }
 }
