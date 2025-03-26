@@ -5,6 +5,7 @@
 - README is well-written and provides clear instructions on running the code
 - Correctly implemented calculations
 - Input validation is done well, using `EstonianPersonalCodeValidator`
+- Implemented code testing
 - Exception handling properly covers multiple cases
 
 ## Changes to be considered
