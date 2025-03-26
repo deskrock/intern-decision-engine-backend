@@ -49,11 +49,10 @@ public class DecisionEngine {
         }
 
         double creditScore = calculateCreditScore(loanAmount.intValue(), loanPeriod);
-        if (creditScore >= 0.1) {
-            int maxLoanAmount = findMaxLoanAmount(loanPeriod);
+        int maxLoanAmount = findMaxLoanAmount(loanPeriod);
+        if (creditScore >= DecisionEngineConstants.CREDIT_SCORE_THRESHOLD) {
             return new Decision(maxLoanAmount, loanPeriod, null);
         } else {
-            int maxLoanAmount = findMaxLoanAmount(loanPeriod);
             if (maxLoanAmount >= DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
                 return new Decision(maxLoanAmount, loanPeriod, null);
             }
@@ -91,7 +90,7 @@ public class DecisionEngine {
         for (int amount = DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT;
              amount >= DecisionEngineConstants.MINIMUM_LOAN_AMOUNT; amount -= 100) {
             double score = calculateCreditScore(amount, loanPeriod);
-            if (score >= 0.1) {
+            if (score >= DecisionEngineConstants.CREDIT_SCORE_THRESHOLD) {
                 return amount;
             }
         }
