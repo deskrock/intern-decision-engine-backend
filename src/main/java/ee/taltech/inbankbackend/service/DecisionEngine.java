@@ -23,7 +23,7 @@ public class DecisionEngine {
     /**
      * Calculates the maximum loan amount and period for the customer based on their ID code,
      * the requested loan amount and the loan period.
-     * The loan period must be between 12 and 60 months (inclusive).
+     * The loan period must be between 12 and 48 months (inclusive).
      * The loan amount must be between 2000 and 10000€ months (inclusive).
      *
      * @param personalCode ID code of the customer that made the request.
@@ -48,18 +48,19 @@ public class DecisionEngine {
         creditModifier = getCreditModifier(personalCode);
 
         if (creditModifier == 0) {
-            throw new NoValidLoanException("No valid loan found!");
+            throw new NoValidLoanException("No valid loan found due to debt!");
         }
 
-        while (highestValidLoanAmount(loanPeriod) < DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
+        while (highestValidLoanAmount(loanPeriod) < DecisionEngineConstants.MINIMUM_LOAN_AMOUNT
+                && loanPeriod <= DecisionEngineConstants.MAXIMUM_LOAN_PERIOD) {
             loanPeriod++;
         }
 
-        if (loanPeriod <= DecisionEngineConstants.MAXIMUM_LOAN_PERIOD) {
-            outputLoanAmount = Math.min(DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT, highestValidLoanAmount(loanPeriod));
-        } else {
+        if (loanPeriod > DecisionEngineConstants.MAXIMUM_LOAN_PERIOD) {
             throw new NoValidLoanException("No valid loan found!");
         }
+
+        outputLoanAmount = Math.min(DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT, highestValidLoanAmount(loanPeriod));
 
         return new Decision(outputLoanAmount, loanPeriod, null);
     }
@@ -114,12 +115,12 @@ public class DecisionEngine {
         if (!validator.isValid(personalCode)) {
             throw new InvalidPersonalCodeException("Invalid personal ID code!");
         }
-        if (!(DecisionEngineConstants.MINIMUM_LOAN_AMOUNT <= loanAmount)
-                || !(loanAmount <= DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT)) {
+        if (loanAmount < DecisionEngineConstants.MINIMUM_LOAN_AMOUNT
+                || loanAmount > DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT) {
             throw new InvalidLoanAmountException("Invalid loan amount!");
         }
-        if (!(DecisionEngineConstants.MINIMUM_LOAN_PERIOD <= loanPeriod)
-                || !(loanPeriod <= DecisionEngineConstants.MAXIMUM_LOAN_PERIOD)) {
+        if (loanPeriod < DecisionEngineConstants.MINIMUM_LOAN_PERIOD
+                || loanPeriod > DecisionEngineConstants.MAXIMUM_LOAN_PERIOD) {
             throw new InvalidLoanPeriodException("Invalid loan period!");
         }
 
