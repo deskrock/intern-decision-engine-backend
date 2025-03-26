@@ -37,11 +37,7 @@ public class DecisionEngine {
     public Decision calculateApprovedLoan(String personalCode, Long loanAmount, int loanPeriod)
             throws InvalidPersonalCodeException, InvalidLoanAmountException, InvalidLoanPeriodException,
             NoValidLoanException {
-        try {
-            verifyInputs(personalCode, loanAmount, loanPeriod);
-        } catch (Exception e) {
-            return new Decision(null, null, e.getMessage());
-        }
+        verifyInputs(personalCode, loanAmount, loanPeriod);
 
         creditModifier = getCreditModifier(personalCode);
         if (creditModifier == 0) {
@@ -51,16 +47,16 @@ public class DecisionEngine {
         double creditScore = calculateCreditScore(loanAmount.intValue(), loanPeriod);
         int maxLoanAmount = findMaxLoanAmount(loanPeriod);
         if (creditScore >= DecisionEngineConstants.CREDIT_SCORE_THRESHOLD) {
-            return new Decision(maxLoanAmount, loanPeriod, null);
+            return new Decision(maxLoanAmount, loanPeriod);
         } else {
             if (maxLoanAmount >= DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
-                return new Decision(maxLoanAmount, loanPeriod, null);
+                return new Decision(maxLoanAmount, loanPeriod);
             }
             for (int period = DecisionEngineConstants.MINIMUM_LOAN_PERIOD;
                  period <= DecisionEngineConstants.MAXIMUM_LOAN_PERIOD; period++) {
                 maxLoanAmount = findMaxLoanAmount(period);
                 if (maxLoanAmount >= DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
-                    return new Decision(maxLoanAmount, period, null);
+                    return new Decision(maxLoanAmount, period);
                 }
             }
             throw new NoValidLoanException("No valid loan found within constraints!");

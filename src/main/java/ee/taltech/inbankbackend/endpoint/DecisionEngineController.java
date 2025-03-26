@@ -21,12 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class DecisionEngineController {
 
     private final DecisionEngine decisionEngine;
-    private final DecisionResponse response;
 
     @Autowired
-    DecisionEngineController(DecisionEngine decisionEngine, DecisionResponse response) {
+    DecisionEngineController(DecisionEngine decisionEngine) {
         this.decisionEngine = decisionEngine;
-        this.response = response;
     }
 
     /**
@@ -44,13 +42,12 @@ public class DecisionEngineController {
      */
     @PostMapping("/decision")
     public ResponseEntity<DecisionResponse> requestDecision(@RequestBody DecisionRequest request) {
+        DecisionResponse response = new DecisionResponse();
         try {
-            Decision decision = decisionEngine.
-                    calculateApprovedLoan(request.getPersonalCode(), request.getLoanAmount(), request.getLoanPeriod());
+            Decision decision = decisionEngine.calculateApprovedLoan(
+                    request.getPersonalCode(), request.getLoanAmount(), request.getLoanPeriod());
             response.setLoanAmount(decision.loanAmount());
             response.setLoanPeriod(decision.loanPeriod());
-            response.setErrorMessage(decision.errorMessage());
-
             return ResponseEntity.ok(response);
         } catch (InvalidPersonalCodeException | InvalidLoanAmountException | InvalidLoanPeriodException e) {
             response.setLoanAmount(null);
