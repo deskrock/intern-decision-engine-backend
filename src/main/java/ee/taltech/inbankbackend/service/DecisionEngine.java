@@ -44,51 +44,48 @@ public class DecisionEngine {
             throw new NoValidLoanException("No valid loan found due to debt!");
         }
 
-        double creditScore = calculateCreditScore(loanAmount.intValue(), loanPeriod);
+        // Find the maximum loan amount that the customer can get for the requested loan period
         int maxLoanAmount = findMaxLoanAmount(loanPeriod);
-        if (creditScore >= DecisionEngineConstants.CREDIT_SCORE_THRESHOLD) {
+        if (maxLoanAmount != 0) {
             return new Decision(maxLoanAmount, loanPeriod);
-        } else {
-            if (maxLoanAmount >= DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
-                return new Decision(maxLoanAmount, loanPeriod);
-            }
-            for (int period = DecisionEngineConstants.MINIMUM_LOAN_PERIOD;
-                 period <= DecisionEngineConstants.MAXIMUM_LOAN_PERIOD; period++) {
-                maxLoanAmount = findMaxLoanAmount(period);
-                if (maxLoanAmount >= DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
-                    return new Decision(maxLoanAmount, period);
-                }
-            }
-            throw new NoValidLoanException("No valid loan found within constraints!");
         }
-    }
-    /**
-     * Calculates the credit score of the customer based on the requested loan amount and period.
-     * The credit score is calculated as follows:
-     * (creditModifier / loanAmount) * loanPeriod / 10
-     *
-     * @param loanAmount Requested loan amount
-     * @param loanPeriod Requested loan period
-     * @return The credit score of the customer
-     */
-    private double calculateCreditScore(int loanAmount, int loanPeriod) {
-        return ((double) creditModifier / loanAmount) * loanPeriod / 10.0;
+
+        // Find the minimum loan period that the customer can get the requested loan amount for
+        int minLoanPeriod = findMinLoanPeriod(loanAmount.intValue());
+        if (minLoanPeriod != 0) {
+            return new Decision(loanAmount.intValue(), minLoanPeriod);
+        }
+
+        // If no valid loan found, throw an exception
+        throw new NoValidLoanException("No valid loan found within constraints!");
+
     }
 
     /**
-     * Finds the maximum loan amount that the customer can get based on their credit score.
-     * The loan amount is decremented by 100 until a valid loan amount is found.
+     * Finds the maximum loan amount that the customer can get for the requested loan period.
      *
      * @param loanPeriod Requested loan period
      * @return The maximum loan amount that the customer can get
      */
     private int findMaxLoanAmount(int loanPeriod) {
-        for (int amount = DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT;
-             amount >= DecisionEngineConstants.MINIMUM_LOAN_AMOUNT; amount -= 100) {
-            double score = calculateCreditScore(amount, loanPeriod);
-            if (score >= DecisionEngineConstants.CREDIT_SCORE_THRESHOLD) {
-                return amount;
-            }
+        int amount = creditModifier * loanPeriod;
+        if (amount >= DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
+            return Math.min(amount, DecisionEngineConstants.MAXIMUM_LOAN_AMOUNT);
+        }
+        return 0;
+    }
+
+    /**
+     * Finds the minimum loan period that the customer can get the requested loan amount for.
+     *
+     * @param loanAmount Requested loan amount
+     * @return The minimum loan period that the customer can get
+     */
+    private int findMinLoanPeriod(int loanAmount) {
+        int period = loanAmount / creditModifier;
+        if (period >= DecisionEngineConstants.MINIMUM_LOAN_PERIOD
+                && period <= DecisionEngineConstants.MAXIMUM_LOAN_PERIOD) {
+            return period;
         }
         return 0;
     }
